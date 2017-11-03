@@ -43,6 +43,8 @@ MONGO_CLIENT_URL = "mongodb://{}:{}@{}:{}/{}".format(
 
 
 print("Using URL '{}'".format(MONGO_CLIENT_URL))
+client = MongoClient(MONGO_CLIENT_URL)
+db = client.memos
 
 
 ###
@@ -90,7 +92,8 @@ def create():
 @app.route("/_receive", methods=['GET', 'POST'])
 def receive():
     body = request.json['body']
-    print(">>>> " + body)
+    date = request.json['date']
+    db.insert_one({"date": date, "body": body}).inserted_id
     return flask.jsonify(url=url_for('index'))
 
 
@@ -147,9 +150,6 @@ def get_memos():
         records.append(record)
     return records
     """
-    client = MongoClient(MONGO_CLIENT_URL)
-    db = client['user-db']
-    user_collection = db['']
 
 
 if __name__ == "__main__":

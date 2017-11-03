@@ -25,7 +25,7 @@
 <body>
 <div class="container">
 
-<input type="date" name="datememo"><br>
+<input type="date" name="datememo" id="datememo"><br>
 <input type="text" name="bodymemo" id="bodymemo"><br>
 <input type="submit" name="sendmemo" id="sendmemo">
 
@@ -33,14 +33,18 @@
 
   $("#sendmemo").click(function() {
 
-    var formData = $("#bodymemo").val();
-    console.log(formData);
+    var bodyData = $("#bodymemo").val();
+    var dateData = $("#datememo").val();
+
+    console.log(bodyData);
+    console.log(dateData);
+
     $.ajax({
       type: 'POST',
       contentType: "application/json",
       dataType: 'json',
       url: '/_receive',
-      data: JSON.stringify({"date": "default", "body": formData}),
+      data: JSON.stringify({"date": dateData, "body": bodyData}),
       success: function(data) {
         window.location.replace(data.url);
       }
