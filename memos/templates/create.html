@@ -31,13 +31,12 @@
 
 <script>
 
-  $("#sendmemo").click(function() {
+  $("#sendmemo").click( function() {
 
     var textData = $("#textmemo").val();
     var dateData = $("#datememo").val();
 
-    console.log(textData);
-    console.log(dateData);
+    console.log("Submission: { \"date\": " + dateData + ", \"text\": " + textData + " }");
 
     $.ajax({
       type: 'POST',

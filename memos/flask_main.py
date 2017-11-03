@@ -19,6 +19,7 @@ from flask import request
 from flask import url_for
 
 import json
+from bson import ObjectId
 import logging
 
 import sys
@@ -94,6 +95,12 @@ def receive():
     collection.insert({"type": "dated_memo", "date": date, "text": text})
     return flask.jsonify(url=url_for('index'))
 
+@app.route("/_delete", methods=['GET', 'POST'])
+def delete():
+    # https://stackoverflow.com/questions/30407166/how-to-convert-hex-string-to-objectid-in-python
+    db_oid = ObjectId(request.json['dbid'])
+    result = collection.delete_one({"_id": db_oid})
+    return flask.jsonify({'result': result.deleted_count})
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -147,6 +154,7 @@ def get_memos():
     records = [ ]
     for record in collection.find( { "type": "dated_memo" } ):
         record['date'] = arrow.get(record['date']).isoformat()
+        record['id'] = str(record['_id'])
         del record['_id']
         records.append(record)
     return records

@@ -42,12 +42,16 @@
     {% for memo in g.memos %}
   <div class="memo">
   <div class="row">
-  <div class="col-md-2">
-    {{ memo.date | humanize }}
-  </div>
-  <div class="col-md-10">
-    {{ memo.text }}
-  </div>
+    <div class="col-md-2">
+      {{ memo.date | humanize }}
+    </div>
+    <div class="col-md-10">
+      {{ memo.text }}
+    </div>
+    <div class="col-sm">
+      <input type="hidden" value="{{ memo.id }}" name="dbid"></input>
+      <input type="submit" value="Delete" name="dbdel"></input>
+    </div>
   </div> <!-- row -->
   </div> <!-- memo -->
   {% endfor %}
@@ -56,7 +60,32 @@
 {% endif %}
 
 
-
 </div> <!-- container -->
+
+<script>
+
+  $("input[name='dbdel']").click( function() {
+
+    var memo_entry = $(this).parents(".memo");
+    var target = memo_entry.find("input[name='dbid']");
+
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      dataType: 'json',
+      url: '/_delete',
+      data: JSON.stringify({'dbid': target.val()}),
+      success: function(data) {
+        if (data) {
+          // https://stackoverflow.com/questions/5404839/how-can-i-refresh-a-page-with-jquery
+          window.location.reload();
+        }
+      }
+    });
+
+  });
+
+</script>
+
 </body>
 </html>
