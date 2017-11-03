@@ -76,8 +76,8 @@ except:
 def index():
   app.logger.debug("Main page entry")
   g.memos = get_memos()
-  #for memo in g.memos:
-      #app.logger.debug("Memo: " + str(memo))
+  for memo in g.memos:
+      app.logger.debug("Memo: " + str(memo))
   return flask.render_template('index.html')
 
 
@@ -136,7 +136,8 @@ def humanize_arrow_date( date ):
 # Functions available to the page code above
 #
 ##############
-@app.template_filter("get_memos")
+
+
 def get_memos():
     """
     Returns all memos in the database, in a form that
@@ -145,7 +146,6 @@ def get_memos():
 
     records = [ ]
     for record in collection.find( { "type": "dated_memo" } ):
-        print(record)
         record['date'] = arrow.get(record['date']).isoformat()
         del record['_id']
         records.append(record)
