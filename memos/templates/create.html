@@ -25,11 +25,32 @@
 <body>
 <div class="container">
 
-<form>
-  <input type="date" name="datei"><br>
-  <input type="text" name="bodyi"><br>
-  <input type="submit" name="sendi">
-</form>
+<input type="date" name="datememo"><br>
+<input type="text" name="bodymemo" id="bodymemo"><br>
+<input type="submit" name="sendmemo" id="sendmemo">
+
+<script>
+
+  $("#sendmemo").click(function() {
+
+    var formData = $("#bodymemo").val();
+    console.log(formData);
+    $.ajax({
+      type: 'POST',
+      contentType: "application/json",
+      dataType: 'json',
+      url: '/_receive',
+      data: JSON.stringify({"date": "default", "body": formData}),
+      success: function(data) {
+        window.location.replace(data.url);
+      }
+    });
+
+  });
+
+
+
+</script>
 
 </div> <!-- container -->
 </body>

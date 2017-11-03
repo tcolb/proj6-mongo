@@ -75,9 +75,9 @@ except:
 @app.route("/index")
 def index():
   app.logger.debug("Main page entry")
-  g.memos = get_memos()
-  for memo in g.memos:
-      app.logger.debug("Memo: " + str(memo))
+  #g.memos = get_memos()
+  #for memo in g.memos:
+      #app.logger.debug("Memo: " + str(memo))
   return flask.render_template('index.html')
 
 
@@ -85,6 +85,13 @@ def index():
 def create():
     app.logger.debug("Create")
     return flask.render_template('create.html')
+
+
+@app.route("/_receive", methods=['GET', 'POST'])
+def receive():
+    body = request.json['body']
+    print(">>>> " + body)
+    return flask.jsonify(url=url_for('index'))
 
 
 @app.errorhandler(404)
@@ -132,13 +139,17 @@ def get_memos():
     """
     Returns all memos in the database, in a form that
     can be inserted directly in the 'session' object.
-    """
+
     records = [ ]
     for record in collection.find( { "type": "dated_memo" } ):
         record['date'] = arrow.get(record['date']).isoformat()
         del record['_id']
         records.append(record)
     return records
+    """
+    client = MongoClient(MONGO_CLIENT_URL)
+    db = client['user-db']
+    user_collection = db['']
 
 
 if __name__ == "__main__":
