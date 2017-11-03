@@ -89,9 +89,9 @@ def create():
 
 @app.route("/_receive", methods=['GET', 'POST'])
 def receive():
-    body = request.json['body']
+    text = request.json['text']
     date = request.json['date']
-    collection.insert({"type": "dated_memo", "date": date, "body": body})
+    collection.insert({"type": "dated_memo", "date": date, "text": text})
     return flask.jsonify(url=url_for('index'))
 
 
