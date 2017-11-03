@@ -43,8 +43,6 @@ MONGO_CLIENT_URL = "mongodb://{}:{}@{}:{}/{}".format(
 
 
 print("Using URL '{}'".format(MONGO_CLIENT_URL))
-client = MongoClient(MONGO_CLIENT_URL)
-db = client.memos
 
 
 ###
@@ -61,7 +59,7 @@ app.secret_key = CONFIG.SECRET_KEY
 try:
     dbclient = MongoClient(MONGO_CLIENT_URL)
     db = getattr(dbclient, CONFIG.DB)
-    collection = db.dated
+    collection = db.memos
 
 except:
     print("Failure opening database.  Is Mongo running? Correct password?")
@@ -77,7 +75,7 @@ except:
 @app.route("/index")
 def index():
   app.logger.debug("Main page entry")
-  #g.memos = get_memos()
+  g.memos = get_memos()
   #for memo in g.memos:
       #app.logger.debug("Memo: " + str(memo))
   return flask.render_template('index.html')
@@ -93,7 +91,7 @@ def create():
 def receive():
     body = request.json['body']
     date = request.json['date']
-    db.insert_one({"date": date, "body": body}).inserted_id
+    collection.insert({"type": "dated_memo", "date": date, "body": body})
     return flask.jsonify(url=url_for('index'))
 
 
@@ -138,18 +136,20 @@ def humanize_arrow_date( date ):
 # Functions available to the page code above
 #
 ##############
+@app.template_filter("get_memos")
 def get_memos():
     """
     Returns all memos in the database, in a form that
     can be inserted directly in the 'session' object.
+    """
 
     records = [ ]
     for record in collection.find( { "type": "dated_memo" } ):
+        print(record)
         record['date'] = arrow.get(record['date']).isoformat()
         del record['_id']
         records.append(record)
     return records
-    """
 
 
 if __name__ == "__main__":

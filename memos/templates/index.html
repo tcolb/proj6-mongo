@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+  <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 <title>Memos</title>
 
@@ -38,24 +38,24 @@
 
 <h1>Memos</h1>
 
-{% if g.memos %}
-    {% for memo in g.memos %}
-  <div class="memo">
-  <div class="row">
-  <div class="col-md-2">
-    {{ memo.date | humanize }}
-  </div>
-  <div class="col-md-10">
-    {{ memo.text }}
-  </div>
-  </div> <!-- row -->
-  </div> <!-- memo -->
+{% if get_memos %}
+  {% for memo in get_memos %}
+    <div class="memo">
+    <div class="row">
+    <div class="col-md-2">
+      {{ memo.date | humanize }}
+    </div>
+    <div class="col-md-10">
+      {{ memo.text }}
+    </div>
+    </div> <!-- row -->
+    </div> <!-- memo -->
   {% endfor %}
 {% else %}
-  <p>No memos for you. </p>  
+  <p>No memos for you. </p>
 {% endif %}
 
- 
+
 
 </div> <!-- container -->
 </body>
