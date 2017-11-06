@@ -83,6 +83,7 @@
       url: '/_delete',
       data: JSON.stringify({'dbid': target.val()}),
       success: function(data) {
+        // If documents were deleted, flask sends the count of deleted documents back in data
         if (data) {
           // https://stackoverflow.com/questions/5404839/how-can-i-refresh-a-page-with-jquery
           window.location.reload();
@@ -91,6 +92,7 @@
     });
   });
 
+  // Go to /create page
   $("#create").click( function() {
     window.location.replace("/create");
   });

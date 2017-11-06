@@ -50,12 +50,15 @@ print("Using URL '{}'".format(MONGO_CLIENT_URL))
 # Globals
 ###
 
+
 app = flask.Flask(__name__)
 app.secret_key = CONFIG.SECRET_KEY
+
 
 ####
 # Database connection per server process
 ###
+
 
 try:
     dbclient = MongoClient(MONGO_CLIENT_URL)
@@ -65,7 +68,6 @@ try:
 except:
     print("Failure opening database.  Is Mongo running? Correct password?")
     sys.exit(1)
-
 
 
 ###
@@ -83,23 +85,34 @@ def index():
 
 @app.route("/create")
 def create():
+    """
+    Create route, renders the create.html page
+    """
     app.logger.debug("Create")
     return flask.render_template('create.html')
 
 
 @app.route("/_receive", methods=['GET', 'POST'])
 def receive():
+    """
+    Receive route, uses ajax and inserts data into db, returns done=True when finished
+    """
     text = request.json['text']
     date = request.json['date']
     collection.insert({"type": "dated_memo", "date": date, "text": text})
-    return flask.jsonify(url=url_for('index'))
+    return flask.jsonify(done=True)
+
 
 @app.route("/_delete", methods=['GET', 'POST'])
 def delete():
+    """
+    Delete route, uses ajax and deletes document from db by id, returns count of deleted documents when done
+    """
     # https://stackoverflow.com/questions/30407166/how-to-convert-hex-string-to-objectid-in-python
     db_oid = ObjectId(request.json['dbid'])
     result = collection.delete_one({"_id": db_oid})
     return flask.jsonify({'result': result.deleted_count})
+
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -157,6 +170,7 @@ def get_memos():
         except:
             record['date'] = "INVALID DATE"
         record['id'] = str(record['_id'])
+        # Not sure why this del was used... So I made my own id entry
         del record['_id']
         records.append(record)
     return records

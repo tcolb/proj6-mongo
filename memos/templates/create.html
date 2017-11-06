@@ -47,13 +47,16 @@
 
 <script>
 
+  // Button listener for adding a memo
   $("#sendmemo").click( function() {
 
+    // Getting data
     var textData = $("#textmemo").val();
     var dateData = $("#datememo").val();
 
     console.log("Submission: { \"date\": " + dateData + ", \"text\": " + textData + " }");
 
+    // If data fields are full
     if (textData != "" & dateData != "") {
       $.ajax({
         type: 'POST',
@@ -62,7 +65,11 @@
         url: '/_receive',
         data: JSON.stringify({"date": dateData, "text": textData}),
         success: function(data) {
-          window.location.replace(data.url);
+          // If server had no errors
+          if (data.done) {
+            // Go back to index page
+            window.location.replace("/");
+          }
         }
       });
     }
