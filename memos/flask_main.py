@@ -73,7 +73,6 @@ except:
 ###
 
 @app.route("/")
-@app.route("/index")
 def index():
   app.logger.debug("Main page entry")
   g.memos = get_memos()
@@ -153,7 +152,10 @@ def get_memos():
 
     records = [ ]
     for record in collection.find( { "type": "dated_memo" } ):
-        record['date'] = arrow.get(record['date']).isoformat()
+        try:
+            record['date'] = arrow.get(record['date']).isoformat()
+        except:
+            record['date'] = "INVALID DATE"
         record['id'] = str(record['_id'])
         del record['_id']
         records.append(record)

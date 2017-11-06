@@ -23,11 +23,27 @@
 
 </head>
 <body>
-<div class="container">
-
-<input type="date" name="datememo" id="datememo"><br>
-<input type="text" name="textmemo" id="textmemo"><br>
-<input type="submit" name="sendmemo" id="sendmemo">
+<div class="container" style="margin-top:30px">
+  <div class="row">
+    <div class="col-sm">
+      <label for="datememo">Date:</label>
+    </div>
+    <div class="col-sm">
+      <input type="date" name="datememo" id="datememo" style="margin-bottom:10px"><br>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <label for="textmemo">Text:</label>
+    </div>
+    <div class="col-sm">
+      <input type="text" name="textmemo" id="textmemo" style="margin-bottom:20px"><br>
+    </div>
+  </div>
+  <div class="row">
+    <input type="submit" name="sendmemo" id="sendmemo">
+  </div>
+</div>
 
 <script>
 
@@ -38,17 +54,18 @@
 
     console.log("Submission: { \"date\": " + dateData + ", \"text\": " + textData + " }");
 
-    $.ajax({
-      type: 'POST',
-      contentType: "application/json",
-      dataType: 'json',
-      url: '/_receive',
-      data: JSON.stringify({"date": dateData, "text": textData}),
-      success: function(data) {
-        window.location.replace(data.url);
-      }
-    });
-
+    if (textData != "" & dateData != "") {
+      $.ajax({
+        type: 'POST',
+        contentType: "application/json",
+        dataType: 'json',
+        url: '/_receive',
+        data: JSON.stringify({"date": dateData, "text": textData}),
+        success: function(data) {
+          window.location.replace(data.url);
+        }
+      });
+    }
   });
 
 

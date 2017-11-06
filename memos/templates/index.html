@@ -15,11 +15,10 @@
    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
    <script
     src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
-</script>
+   </script>
 
    <!-- Our own style sheet -->
    <link rel="stylesheet" href="/static/css/memos.css" />
-
 
 </head>
 <body>
@@ -36,21 +35,24 @@
   {% endif %}
 {% endwith %}
 
-<h1>Memos</h1>
+<h1 style="margin-bottom:20px">Memos</h1>
 
 {% if g.memos %}
     {% for memo in g.memos %}
   <div class="memo">
-  <div class="row">
-    <div class="col-md-2">
-      {{ memo.date | humanize }}
-    </div>
-    <div class="col-md-10">
-      {{ memo.text }}
+  <div class="row" style="border:1px solid grey; margin:10px; padding:5px">
+    <div class="col-sm">
+      <b>{{ memo.date | humanize }}</b>
     </div>
     <div class="col-sm">
+      {{ memo.text }}
+    </div>
+  </div> <!-- row -->
+  <div class="row">
+    <div class="col-sm">
+      <!-- hidden value to hold id of db entry to delete -->
       <input type="hidden" value="{{ memo.id }}" name="dbid"></input>
-      <input type="submit" value="Delete" name="dbdel"></input>
+      <input type="submit" value="Delete" name="dbdel" style="margin-left:30px; margin-bottom:15px"></input>
     </div>
   </div> <!-- row -->
   </div> <!-- memo -->
@@ -59,11 +61,16 @@
   <p>No memos for you. </p>
 {% endif %}
 
+  <div class="row">
+    <input type="submit" id="create" value="Create new memo" style="margin-left:15px; margin-top:30px; margin-bottom:15px;"></input>
+  </div>
+
 
 </div> <!-- container -->
 
 <script>
 
+  // Delete functionality with ajax
   $("input[name='dbdel']").click( function() {
 
     var memo_entry = $(this).parents(".memo");
@@ -82,7 +89,10 @@
         }
       }
     });
+  });
 
+  $("#create").click( function() {
+    window.location.replace("/create");
   });
 
 </script>
